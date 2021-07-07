@@ -77,7 +77,7 @@ class TOXICDataset(Dataset):
         'label' : torch.tensor(label, dtype=torch.long)
     }
 
-def f1_score(y_true, y_pred):
+def f1_score_model(y_true, y_pred):
   
   epsilon = 1e-7 
   # print(y_true, y_pred, y_true.shape, y_pred.shape)
@@ -145,7 +145,7 @@ def train_epoch(model, data_loader, loss_fn, optimizer, device, scheduler, n_exa
     correct_predictions += torch.sum(pred == labels)
     losses.append(loss.item())
 
-    f1_value = f1_score(labels, pred)
+    f1_value = f1_score_model(labels, pred)
     f1_score_meter.update(f1_value, len(labels))
 
   # mean loss, number of correct_prediction (each batch)
@@ -176,7 +176,7 @@ def eval_model(model, data_loader, loss_fn, device, n_examples):
       correct_predictions += torch.sum(pred == labels)
       losses.append(loss.item())
 
-      f1_value = f1_score(labels, pred)
+      f1_value = f1_score_model(labels, pred)
       f1_score_meter.update(f1_value, len(labels))
 
   return correct_predictions.double() / n_examples, np.mean(losses), f1_score_meter
